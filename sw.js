@@ -1,9 +1,9 @@
 // ── PRIME STEAK HOUSE — Service Worker ──────────────────
-const CACHE_NAME = 'prime-steak-v1';
+const CACHE_NAME = 'prime-steak-v2';
 
 // キャッシュするファイル一覧
 const ASSETS = [
-  './steak_order_app.html',
+  './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
@@ -47,7 +47,7 @@ self.addEventListener('fetch', event => {
         return response;
       }).catch(() => {
         // 完全オフラインのフォールバック
-        return caches.match('./steak_order_app.html');
+        return caches.match('./index.html');
       });
     })
   );
