@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRIME STEAK HOUSE</title>
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PRIME">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --deep: #111111;
+    --surface: #181818;
+    --card: #1e1e1e;
+    --border: #2a2a2a;
+    --gold: #c9a84c;
+    --gold-light: #e8cc80;
+    --white: #f5f0e8;
+    --gray: #888;
+    --red: #8b1a1a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ──────────────────────────────────────
+     LOGIN SCREEN
+  ────────────────────────────────────── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+  }
+
+  .bg-lines {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .bg-lines::before,
+  .bg-lines::after {
+    content: '';
+    position: absolute;
+    border: 1px solid rgba(201,168,76,0.07);
+    border-radius: 50%;
+  }
+  .bg-lines::before {
+    width: 80vw; height: 80vw;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .bg-lines::after {
+    width: 55vw; height: 55vw;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    animation: fadeUp 0.9s cubic-bezier(.22,.68,0,1.2) both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4.5rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.2rem;
+  }
+
+  .logo-sub {
+    font-size: 0.6rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .divider-diamond {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  .login-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+
+  .login-input-wrap {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .login-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    font-size: 1.8rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    letter-spacing: 0.5em;
+    text-align: center;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.3s;
+    text-transform: uppercase;
+  }
+  .login-input::placeholder {
+    color: var(--border);
+    letter-spacing: 0.3em;
+  }
+  .login-input:focus {
+    border-bottom-color: var(--gold);
+  }
+
+  .login-hint {
+    font-size: 0.6rem;
+    color: var(--gray);
+    letter-spacing: 0.2em;
+    margin-top: 0.6rem;
+  }
+
+  .btn-login {
+    margin-top: 2rem;
+    width: 100%;
+    padding: 1.1rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-login::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(.77,0,.175,1);
+  }
+  .btn-login:hover::before { transform: translateX(0); }
+  .btn-login:hover { color: var(--black); }
+  .btn-login span { position: relative; z-index: 1; }
+
+  .login-error {
+    margin-top: 1rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: #c0392b;
+    min-height: 1.2rem;
+  }
+
+  /* ──────────────────────────────────────
+     MAIN APP
+  ────────────────────────────────────── */
+  #app {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  #app.active { display: flex; }
+
+  /* Header */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,10,0.96);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
+
+  .header-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+  }
+
+  .header-store {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .header-cart-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .header-cart-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .cart-count {
+    background: var(--gold);
+    color: var(--black);
+    border-radius: 50%;
+    width: 18px; height: 18px;
+    font-size: 0.55rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Main content */
+  .app-main {
+    flex: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 3rem 1.5rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.6em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: 2.5rem;
+    line-height: 1;
+  }
+
+  /* Category tabs */
+  .categories {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .categories::-webkit-scrollbar { display: none; }
+
+  .cat-btn {
+    background: none;
+    border: none;
+    color: var(--gray);
+    padding: 0.8rem 1.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .cat-btn:hover { color: var(--white); }
+  .cat-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* Menu grid */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5px;
+    margin-bottom: 4rem;
+  }
+
+  .menu-item {
+    background: var(--card);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+    animation: itemIn 0.5s ease both;
+  }
+  .menu-item:hover { background: #222; }
+
+  @keyframes itemIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .item-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.85);
+    transition: filter 0.4s, transform 0.4s;
+  }
+  .menu-item:hover .item-img {
+    filter: brightness(1);
+    transform: scale(1.03);
+  }
+
+  .item-emoji-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    background: linear-gradient(135deg, #1a1a1a, #242424);
+    transition: transform 0.4s;
+  }
+  .menu-item:hover .item-emoji-placeholder { transform: scale(1.05); }
+
+  .item-body {
+    padding: 1.2rem 1.4rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .item-category-tag {
+    font-size: 0.5rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
+  }
+
+  .item-desc {
+    font-size: 0.6rem;
+    color: var(--gray);
+    letter-spacing: 0.05em;
+    line-height: 1.7;
+    margin-bottom: 0.8rem;
+  }
+
+  .item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .item-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: var(--gold-light);
+  }
+  .item-price span {
+    font-size: 0.65rem;
+    color: var(--gray);
+    font-family: 'Montserrat', sans-serif;
+    margin-right: 0.2rem;
+  }
+
+  .add-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--white);
+    width: 32px; height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.25s;
+    flex-shrink: 0;
+  }
+  .add-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+
+  /* ── CART PANEL ── */
+  .cart-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    backdrop-filter: blur(4px);
+  }
+  .cart-overlay.open { display: block; }
+
+  .cart-panel {
+    position: fixed;
+    top: 0; right: 0;
+    width: min(440px, 100vw);
+    height: 100vh;
+    background: var(--deep);
+    border-left: 1px solid var(--border);
+    z-index: 201;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(.77,0,.175,1);
+  }
+  .cart-panel.open { transform: translateX(0); }
+
+  .cart-header {
+    padding: 1.8rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .cart-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: var(--gray);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.3rem;
+    transition: color 0.2s;
+  }
+  .close-btn:hover { color: var(--white); }
+
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 2rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .cart-empty {
+    text-align: center;
+    color: var(--gray);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 4rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  .cart-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+
+  .cart-item-info { flex: 1; }
+  .cart-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+  .cart-item-price {
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .cart-item-qty {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .qty-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--white);
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  .qty-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .qty-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    min-width: 1.5rem;
+    text-align: center;
+  }
+
+  .cart-footer {
+    padding: 1.5rem 2rem 2rem;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .cart-note-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .cart-note {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 0.8rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 1.2rem;
+  }
+  .cart-note:focus { border-color: var(--gold); }
+
+  .cart-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+  }
+  .total-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+  .total-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: var(--gold-light);
+  }
+  .total-price small {
+    font-size: 0.7rem;
+    color: var(--gray);
+    font-family: 'Montserrat', sans-serif;
+    margin-right: 0.3rem;
+  }
+
+  .btn-order {
+    width: 100%;
+    padding: 1.1rem;
+    background: var(--gold);
+    border: none;
+    color: var(--black);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s;
+  }
+  .btn-order:hover { background: var(--gold-light); }
+  .btn-order:disabled {
+    background: var(--border);
+    color: var(--gray);
+    cursor: not-allowed;
+  }
+
+  /* ── CONFIRM MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--deep);
+    border: 1px solid var(--border);
+    width: min(480px, 92vw);
+    padding: 3rem 2.5rem;
+    text-align: center;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .modal-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+  .modal-body {
+    font-size: 0.65rem;
+    color: var(--gray);
+    letter-spacing: 0.15em;
+    line-height: 2;
+    margin-bottom: 2rem;
+  }
+  .modal-order-list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+  .modal-order-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0;
+    color: var(--white);
+  }
+  .modal-total {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    border-top: 1px solid var(--border);
+    padding-top: 0.8rem;
+    margin-top: 0.5rem;
+    color: var(--gold-light);
+  }
+  .modal-total small {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    color: var(--gray);
+    align-self: center;
+    margin-right: 0.3rem;
+  }
+
+  .modal-btns {
+    display: flex;
+    gap: 1rem;
+  }
+  .btn-cancel {
+    flex: 1;
+    padding: 0.9rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--gray);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-cancel:hover { border-color: var(--white); color: var(--white); }
+  .btn-confirm {
+    flex: 1;
+    padding: 0.9rem;
+    background: var(--gold);
+    border: none;
+    color: var(--black);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-confirm:hover { background: var(--gold-light); }
+
+  /* ── SUCCESS ── */
+  .success-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 400;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+  }
+  .success-screen.active { display: flex; animation: fadeUp 0.6s ease both; }
+
+  .success-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .success-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.5em;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .success-msg {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+  }
+  .success-sub {
+    font-size: 0.65rem;
+    color: var(--gray);
+    letter-spacing: 0.2em;
+    margin-bottom: 3rem;
+  }
+  .btn-back {
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 0.9rem 2.5rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn-back:hover { background: var(--gold); color: var(--black); }
+
+  /* responsive */
+  @media (max-width: 500px) {
+    .section-heading { font-size: 1.8rem; }
+    .app-header { padding: 1rem; }
+    .header-logo { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─────────────── LOGIN ─────────────── -->
+<div id="login-screen">
+  <div class="bg-lines"></div>
+  <div class="login-box">
+    <div class="logo-mark">PRIME</div>
+    <div class="logo-sub">Steak House</div>
+    <div class="divider"><div class="divider-diamond"></div></div>
+
+    <span class="login-label">店舗コードを入力</span>
+    <div class="login-input-wrap">
+      <input
+        type="text"
+        id="store-code-input"
+        class="login-input"
+        placeholder="— — — —"
+        maxlength="10"
+        autocomplete="off"
+        autocapitalize="characters"
+      >
+    </div>
+    <div class="login-hint">メニューに記載の店舗コードをご入力ください</div>
+
+    <button class="btn-login" onclick="doLogin()"><span>入 店</span></button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ─────────────── APP ─────────────── -->
+<div id="app">
+  <header class="app-header">
+    <div>
+      <div class="header-logo">PRIME STEAK HOUSE</div>
+    </div>
+    <div style="text-align:center">
+      <div class="header-store" id="store-name-display"></div>
+    </div>
+    <button class="header-cart-btn" onclick="openCart()">
+      <span>カート</span>
+      <span class="cart-count" id="cart-count">0</span>
+    </button>
+  </header>
+
+  <main class="app-main">
+    <div class="section-title">Our Selection</div>
+    <h2 class="section-heading">本日のメニュー</h2>
+
+    <nav class="categories" id="categories"></nav>
+    <div class="menu-grid" id="menu-grid"></div>
+  </main>
+</div>
+
+<!-- ─────────────── CART ─────────────── -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <div class="cart-title">Cart</div>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">— カートは空です —</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-note-label">特記事項・アレルギー</div>
+    <textarea class="cart-note" id="cart-note" rows="3" placeholder="例）ウェルダン希望、ワサビなし…"></textarea>
+    <div class="cart-total">
+      <span class="total-label">合計</span>
+      <span class="total-price"><small>¥</small><span id="total-amount">0</span></span>
+    </div>
+    <button class="btn-order" id="order-btn" onclick="openConfirm()" disabled>
+      注文を確定する
+    </button>
+  </div>
+</div>
+
+<!-- ─────────────── CONFIRM MODAL ─────────────── -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-icon">🥩</div>
+    <div class="modal-title">ご注文の確認</div>
+    <div class="modal-order-list" id="confirm-list"></div>
+    <div class="modal-body">
+      上記の内容でご注文を確定します。<br>
+      ご確認の上、「注文する」ボタンを押してください。
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeConfirm()">戻 る</button>
+      <button class="btn-confirm" onclick="placeOrder()">注 文 す る</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── SUCCESS ─────────────── -->
+<div class="success-screen" id="success-screen">
+  <div class="success-num" id="order-number">—</div>
+  <div class="success-label">Order Number</div>
+  <div class="success-msg">ご注文ありがとうございます</div>
+  <div class="success-sub">まもなくお届けに参ります</div>
+  <button class="btn-back" onclick="backToMenu()">メニューに戻る</button>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────
+const STORES = {
+  "CLUB01": "Club Azalea",
+  "CLUB02": "Lounge Bijou",
+  "GIRLS01": "Girls Bar Luxe",
+  "GIRLS02": "Girls Bar Ciel",
+  "SNACK01": "Snack Étoile",
+  "SNACK02": "Snack Première",
+  "VIP001":  "VIP Room A",
+  // ← ここに店舗コードを追加してください
+};
+
+const MENU = [
+  // ステーキ
+  { id: 1, cat: "steak", name: "Wagyu Ribeye 200g", desc: "A5黒毛和牛リブアイ。霜降りの旨味を最大限に引き出した逸品。", price: 6800, emoji: "🥩" },
+  { id: 2, cat: "steak", name: "Tenderloin 180g", desc: "希少なヒレ肉。きめ細やかな肉質と上品な甘みが特徴。", price: 5800, emoji: "🥩" },
+  { id: 3, cat: "steak", name: "Sirloin 250g", desc: "芳醇な香りと豊かな旨味。王道サーロインをお楽しみください。", price: 4800, emoji: "🥩" },
+  { id: 4, cat: "steak", name: "NY Strip 220g", desc: "赤身の力強い風味とほどよいサシが絶妙なバランス。", price: 4500, emoji: "🥩" },
+
+  // サイドメニュー
+  { id: 5, cat: "side", name: "Truffle Frites", desc: "トリュフオイルとパルミジャーノをまとった贅沢なフライドポテト。", price: 980, emoji: "🍟" },
+  { id: 6, cat: "side", name: "Cream Spinach", desc: "国産ほうれん草をたっぷり使ったクリームほうれん草。", price: 780, emoji: "🥬" },
+  { id: 7, cat: "side", name: "Grilled Asparagus", desc: "炭火焼きアスパラガス、バルサミコリダクション添え。", price: 680, emoji: "🌿" },
+  { id: 8, cat: "side", name: "Caesar Salad", desc: "アンチョビドレッシングとクルトンのクラシックシーザー。", price: 880, emoji: "🥗" },
+
+  // ドリンク
+  { id: 9,  cat: "drink", name: "Red Wine (Glass)", desc: "厳選ボルドー産カベルネ・ソーヴィニヨン。", price: 1200, emoji: "🍷" },
+  { id: 10, cat: "drink", name: "Champagne (Glass)", desc: "フランス産ブリュット。祝杯にどうぞ。", price: 1800, emoji: "🥂" },
+  { id: 11, cat: "drink", name: "Craft Beer", desc: "地元醸造所のプレミアムクラフトビール。", price: 900, emoji: "🍺" },
+  { id: 12, cat: "drink", name: "Still Water (500ml)", desc: "イタリア産プレミアムミネラルウォーター。", price: 400, emoji: "💧" },
+
+  // デザート
+  { id: 13, cat: "dessert", name: "Crème Brûlée", desc: "バニラビーンズたっぷりのクラシックフレンチデザート。", price: 780, emoji: "🍮" },
+  { id: 14, cat: "dessert", name: "Chocolate Fondant", desc: "中からとろけるショコラフォンダン、バニラアイス添え。", price: 880, emoji: "🍫" },
+];
+
+const CATS = [
+  { id: "all",     label: "All" },
+  { id: "steak",   label: "Steak" },
+  { id: "side",    label: "Side" },
+  { id: "drink",   label: "Drink" },
+  { id: "dessert", label: "Dessert" },
+];
+
+// ─── STATE ──────────────────────────────────────────────
+let currentStore = null;
+let currentCat   = "all";
+let cart = [];  // [{item, qty}]
+
+// ─── LOGIN ──────────────────────────────────────────────
+function doLogin() {
+  const code = document.getElementById("store-code-input").value.trim().toUpperCase();
+  const err  = document.getElementById("login-error");
+  if (!code) { err.textContent = "店舗コードを入力してください"; return; }
+  if (!STORES[code]) { err.textContent = "無効な店舗コードです。メニューをご確認ください。"; return; }
+
+  currentStore = { code, name: STORES[code] };
+  err.textContent = "";
+  document.getElementById("store-name-display").textContent = currentStore.name;
+
+  document.getElementById("login-screen").style.display = "none";
+  const app = document.getElementById("app");
+  app.classList.add("active");
+
+  renderCategories();
+  renderMenu();
+}
+
+document.getElementById("store-code-input").addEventListener("keydown", e => {
+  if (e.key === "Enter") doLogin();
+});
+
+// ─── CATEGORIES ─────────────────────────────────────────
+function renderCategories() {
+  const nav = document.getElementById("categories");
+  nav.innerHTML = CATS.map(c => `
+    <button class="cat-btn${c.id === currentCat ? ' active' : ''}"
+      onclick="selectCat('${c.id}')">${c.label}</button>
+  `).join("");
+}
+
+function selectCat(id) {
+  currentCat = id;
+  renderCategories();
+  renderMenu();
+}
+
+// ─── MENU ────────────────────────────────────────────────
+function renderMenu() {
+  const grid = document.getElementById("menu-grid");
+  const items = currentCat === "all" ? MENU : MENU.filter(m => m.cat === currentCat);
+  grid.innerHTML = items.map((item, i) => `
+    <div class="menu-item" style="animation-delay:${i * 0.05}s">
+      <div class="item-emoji-placeholder">${item.emoji}</div>
+      <div class="item-body">
+        <div class="item-category-tag">${item.cat}</div>
+        <div class="item-name">${item.name}</div>
+        <div class="item-desc">${item.desc}</div>
+        <div class="item-footer">
+          <div class="item-price"><span>¥</span>${item.price.toLocaleString()}</div>
+          <button class="add-btn" onclick="addToCart(${item.id})" title="カートに追加">+</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+// ─── CART ────────────────────────────────────────────────
+function addToCart(itemId) {
+  const item = MENU.find(m => m.id === itemId);
+  const existing = cart.find(c => c.item.id === itemId);
+  if (existing) { existing.qty++; }
+  else { cart.push({ item, qty: 1 }); }
+  updateCartUI();
+
+  // flash feedback
+  const btn = event.currentTarget;
+  btn.textContent = "✓";
+  btn.style.borderColor = "var(--gold)";
+  btn.style.color = "var(--gold)";
+  setTimeout(() => { btn.textContent = "+"; btn.style.borderColor = ""; btn.style.color = ""; }, 700);
+}
+
+function removeFromCart(itemId) {
+  const idx = cart.findIndex(c => c.item.id === itemId);
+  if (idx < 0) return;
+  cart[idx].qty--;
+  if (cart[idx].qty <= 0) cart.splice(idx, 1);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const total    = cart.reduce((s, c) => s + c.item.price * c.qty, 0);
+  const totalQty = cart.reduce((s, c) => s + c.qty, 0);
+
+  document.getElementById("cart-count").textContent = totalQty;
+  document.getElementById("total-amount").textContent = total.toLocaleString();
+  document.getElementById("order-btn").disabled = cart.length === 0;
+
+  const container = document.getElementById("cart-items");
+  if (cart.length === 0) {
+    container.innerHTML = '<div class="cart-empty">— カートは空です —</div>';
+    return;
+  }
+  container.innerHTML = cart.map(c => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${c.item.name}</div>
+        <div class="cart-item-price">¥${c.item.price.toLocaleString()} × ${c.qty} = ¥${(c.item.price * c.qty).toLocaleString()}</div>
+      </div>
+      <div class="cart-item-qty">
+        <button class="qty-btn" onclick="removeFromCart(${c.item.id})">−</button>
+        <span class="qty-num">${c.qty}</span>
+        <button class="qty-btn" onclick="addToCart(${c.item.id})">＋</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function openCart() {
+  document.getElementById("cart-overlay").classList.add("open");
+  document.getElementById("cart-panel").classList.add("open");
+}
+function closeCart() {
+  document.getElementById("cart-overlay").classList.remove("open");
+  document.getElementById("cart-panel").classList.remove("open");
+}
+
+// ─── CONFIRM ─────────────────────────────────────────────
+function openConfirm() {
+  const note  = document.getElementById("cart-note").value;
+  const total = cart.reduce((s, c) => s + c.item.price * c.qty, 0);
+  const rows  = cart.map(c => `
+    <div class="modal-order-row">
+      <span>${c.item.name} × ${c.qty}</span>
+      <span>¥${(c.item.price * c.qty).toLocaleString()}</span>
+    </div>
+  `).join("");
+  const noteRow = note ? `<div class="modal-order-row" style="color:var(--gray);font-style:italic"><span>備考</span><span>${note}</span></div>` : "";
+  document.getElementById("confirm-list").innerHTML = `
+    ${rows}
+    ${noteRow}
+    <div class="modal-total">
+      <span>合計</span>
+      <span><small>¥</small>${total.toLocaleString()}</span>
+    </div>
+  `;
+  document.getElementById("confirm-modal").classList.add("open");
+}
+function closeConfirm() {
+  document.getElementById("confirm-modal").classList.remove("open");
+}
+
+function placeOrder() {
+  closeConfirm();
+  closeCart();
+
+  // 注文番号生成
+  const num = Math.floor(Math.random() * 9000) + 1000;
+  document.getElementById("order-number").textContent = `#${num}`;
+
+  // 注文ログ（コンソール出力 ← バックエンド連携時はここをAPIに置き換え）
+  const order = {
+    orderNo:   num,
+    store:     currentStore,
+    items:     cart.map(c => ({ name: c.item.name, qty: c.qty, price: c.item.price })),
+    note:      document.getElementById("cart-note").value,
+    total:     cart.reduce((s, c) => s + c.item.price * c.qty, 0),
+    timestamp: new Date().toISOString(),
+  };
+  console.log("📦 ORDER:", JSON.stringify(order, null, 2));
+
+  document.getElementById("success-screen").classList.add("active");
+}
+
+function backToMenu() {
+  cart = [];
+  updateCartUI();
+  document.getElementById("cart-note").value = "";
+  document.getElementById("success-screen").classList.remove("active");
+}
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.log('SW error:', err));
+    });
+  }
+</script>
+</body>
+</html>
