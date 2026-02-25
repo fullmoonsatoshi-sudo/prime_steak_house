@@ -1,8 +1,8 @@
 {
   "name": "PRIME STEAK HOUSE",
-  "short_name": "PRIME",
+  "short_name": "PRIME STEAK",
   "description": "PRIME STEAK HOUSE — デリバリー注文アプリ",
-  "start_url": "./steak_order_app.html",
+  "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0a0a",
